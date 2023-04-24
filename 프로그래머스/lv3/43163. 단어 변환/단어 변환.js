@@ -6,32 +6,35 @@ function solution(begin, target, words) {
     
     let visit = new Array(words.length).fill(false);
     
-    function BFS(w, count) {
-        let queue = [w]
+    function BFS(w) {
+        let queue = [w];
         
         while(queue.length > 0) {
-            let wArr = queue.shift()
-            if(wArr === target) return ;
-            answer++
+            let wArr = queue.shift();
+            answer++;
+            if(wArr === target) return;
             
             for(let i=0; i<words.length; i++) {
                 if(visit[i] === true) continue;
                 let cnt = 0;
-                for(let j=0; j<wArr.length; j++) {
-                    if(words[i][j] === wArr[j]) {
-                        cnt++
-                    }
-                }
-                if(cnt === begin.length-1) {
-                    queue.push(words[i])
-                    break;
-                }
+                let targetCnt = 0;
                 visit[i] = true;
+                
+                for(let j=0; j<wArr.length; j++) {
+                    if(wArr[j] === words[i][j]) cnt++;
+                    if(wArr[j] === target[j]) targetCnt++;
+                }
+                if(targetCnt === begin.length-1) {
+                    queue.push(target);
+                } else if(cnt === begin.length-1) {
+                    queue.push(words[i]);
+                    break;
+                } else {
+                    continue;
+                }
             }
         }
     }
-    BFS(begin,answer);
-    console.log(visit)
-    console.log(answer-1)
-    return answer;
+    BFS(begin);
+    return answer-1;
 }
