@@ -20,7 +20,8 @@ function solution(number, k) {
             } else { // 9도 아니고, max보다 작을 경우
                 idx++;
             }
-        } else { // idx가 탐색할 수 있는 범위까지 도달항 경우, answer에 max를 더해준 뒤, max 초기화 밑 가장 큰 수의 다음 수 부터 다시 탐색하기 위해 가장 큰 수의 index+1을 idx에 대입, 만들어야 할 가장 큰 숫자중 한자리 채웠으니 kCopy --
+            /* idx가 탐색할 수 있는 범위까지 도달항 경우, answer에 max를 더해준 뒤, max 초기화 밑 가장 큰 수의 다음 수 부터 다시 탐색하기 위해 가장 큰 수의 index+1을 idx에 대입, 만들어야 할 가장 큰 숫자중 한자리 채웠으니 kCopy-- */
+        } else {
             answer += String(max);
             max = 0;
             idx = i+1;
