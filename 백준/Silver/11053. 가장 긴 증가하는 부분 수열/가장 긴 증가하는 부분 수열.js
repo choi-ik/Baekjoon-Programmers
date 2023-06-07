@@ -38,4 +38,4 @@ while (i < N) {
     i++;
 }
 
-console.log(j + 1);
+console.log(lis.length);
