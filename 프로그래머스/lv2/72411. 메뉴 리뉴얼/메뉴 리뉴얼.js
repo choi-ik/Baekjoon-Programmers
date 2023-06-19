@@ -18,7 +18,6 @@ function solution(orders, course) {
         orders[i] = temp.join("");
     });
     
-    console.log(orders);
     // 조합 코드
     function comb(arr, len, menu) {
         if (menu.length === len) {
@@ -36,16 +35,15 @@ function solution(orders, course) {
         };
     };
     
-    
     for (let i = 0; i < orders.length; i ++) {
         for (let j = 2; j <= orders.length; j++) {
             comb(orders[i], j, "", 0);
         }
     };
-
+    
     cook = Object.values(cook)
         .sort((a, b) => b.num - a.num);
-    
+
     course.forEach((nums) => {
         let cnt = 0;
         cook.forEach((menu) => {
@@ -58,9 +56,8 @@ function solution(orders, course) {
             }
         })
     })
-
+    
     answer.sort();
-    console.log(answer, "답지")
     
     return answer;
 }
