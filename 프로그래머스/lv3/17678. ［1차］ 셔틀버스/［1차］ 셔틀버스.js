@@ -1,39 +1,38 @@
 function solution(n, t, m, timetable) {
     let timeArr = [];
-    let BusTime = 540;     // 60 * 9 -> 첫 셔틀 운행 시각 
-    
+    let busTime = 540;
+
     timetable.forEach((time) => {
-        let curTime = time.split(":").map(e => +e);
-        let totalTime = curTime[0] * 60 + curTime[1];
-        // 분 단위 시간 계산
+        let currentTIme = time.split(":").map(e => +e);
+        let totalTime = currentTIme[0] * 60 + currentTIme[1];
         timeArr.push(totalTime);
     });
-    
-    // 시간 오름차순 정렬
-    timeArr.sort((a, b) => a- b);
+
+    timeArr.sort((a, b) => a - b);      //  대기열 오름차순 정렬
     
     for (let i = 0; i < n; i ++) {
-        let currentPeople = timeArr.filter((t) => t <= BusTime).length;
+        let ride = timeArr.filter((people) => people <= busTime).length;
         
-        // 마지막 운행 버스라면
-        if (i === n - 1) {
-            // 타야하는 승객 수가 m명 이상인 경우, 무조건 m-1보다 1분 앞에 나와 버스 타야함
-            if (currentPeople >= m) BusTime = timeArr[m-1] - 1;
+        // 현재 도착한 버스가 막차일 경우
+        if (i === n-1) {
+            // 인원이 꽉찼을 경우 마지막 탄 사람 보다 1분 빨리 타야함. || 인원이 꽉차지 않았을 경우에는 버스 도착하는 시간에 맞춰 타면 됨.
+            if (ride >= m) busTime = timeArr[m-1] - 1;
         }
-        // 마지막 운행 버스가 아니라면
+        // 현재 도착한 버스가 막차가 아닐 경우 
         else {
-            if (currentPeople > m) timeArr.splice(0, m);
-            if (currentPeople <= m) timeArr.splice(0, currentPeople);
-            
-            BusTime += t;   // 셔틀 간격만큼 시각 증가
+            if (ride < m) timeArr.splice(0, ride);
+            else timeArr.splice(0, m);
+
+            // 버스 시간을 운행 간격만큼 늘려줌
+            busTime += t;
         }
-    }
-    
-    let hour = Math.floor(BusTime/60);
-    let minute = BusTime % 60;
-    
-    hour < 10 ? hour = "0" + String(hour) : String(hour)
-    minute < 10 ? minute = "0" + String(minute) : String(minute)
-    
-    return (hour+":"+minute)
+    };
+
+    let hour = Math.floor(busTime / 60);
+    let minute = busTime % 60;
+
+    hour < 10 ? hour = "0" + hour : hour;
+    minute < 10 ? minute = "0" + minute : minute;
+
+    return hour+":"+minute;
 }
