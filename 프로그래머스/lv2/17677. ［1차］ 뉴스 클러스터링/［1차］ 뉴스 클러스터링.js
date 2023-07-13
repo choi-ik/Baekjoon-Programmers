@@ -25,7 +25,7 @@ function solution(str1, str2) {
         for(let j = 0; j < arrB.length; j++) {
             if (arrA[i] === arrB[j]) {
                 min ++;
-                arrB[j] = "";
+                arrB[j] = ""; // 공백으로 바꿔줌으로써 비교 불가로 만듬
                 break;
             };
         };
