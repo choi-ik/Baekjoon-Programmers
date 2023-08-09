@@ -1,63 +1,77 @@
-/*
-    코스 요리 형태로 조합.
-    가장 많이 주문한 단품 메뉴들을 코스로 구성(최소 2가지 이상)
-    
-    1. 각 메뉴를 조합하여 2자리 이상부터 메뉴의 길이만큼의 조합을 만들어 객체의 키로 설정
-    2. 키가 이미 존재한다면 키에 대한 값을 +1
-    3. 존재하는 키에 대해 값이 2 이상이면 2번 이상 주문된 요리이므로, 문자열의 길이가 course와 같은지 확인한다
-    4. 문자열의 길이가 course와 같다면, answer에 원소를 오름차순 정렬하여 추가해주고, 마지막에 answer를 사전 순으로 오름차순 정렬해준다.
-*/
-
 function solution(orders, course) {
     let answer = [];
-    let cook = {};
+    let obj = {};
     
-    orders.forEach((e, i) => {
-        let temp = e.split("");
-        temp.sort();
-        orders[i] = temp.join("");
-    });
+    // 코스요리 갯수를 딕셔너리의 키로 생성
+    for (let i of course) {
+        if (i in obj === false) obj[i] = {};
+    };
     
-    // 조합 코드
-    function comb(arr, len, menu) {
-        if (menu.length === len) {
-            if (!cook[menu]) cook[menu] = {name : menu, num : 1};
-            else cook[menu].num += 1;
-            
-            return;
+    // 손님이 주문한 단품메뉴들을 코스요리로 만들어 딕셔너리에 저장
+    for (let str of orders) {
+        str = str.split("");
+        str.sort();
+        let menu = [];
+
+        // 단품 메뉴 2개 이상으로 만들 수 있는 코스요리 경우의 수 구함 
+        for (let i = 2; i <= str.length; i ++) {
+            menu.push(...getComb(str, i));
         };
         
-        for (let i = 0; i < arr.length; i++) {
-            let menuCopy = menu + arr[i];
-            let rest = arr.slice(i+1)
-            
-            comb(rest, len, menuCopy);            
-        };
+        menu.forEach((s) => {
+            s = s.join("");
+            // 문자열 길이(키)가 딕셔너리에 존재하고
+            if (s.length in obj) {
+                // 문자열이 키에 존재한다면
+                if (s in obj[s.length]) obj[s.length][s] += 1;
+                // 존재하지 않는다면 생성해주고 1 저장
+                else obj[s.length][s] = 1;
+            };
+        });
     };
     
-    for (let i = 0; i < orders.length; i ++) {
-        for (let j = 2; j <= orders.length; j++) {
-            comb(orders[i], j, "", 0);
-        }
-    };
-    
-    cook = Object.values(cook)
-        .sort((a, b) => b.num - a.num);
-
-    course.forEach((nums) => {
-        let cnt = 0;
-        cook.forEach((menu) => {
-            if (menu.name.length === nums && menu.num >= 2) {
-                if (menu.num > cnt) { 
-                    cnt = menu.num;
-                    answer.push(menu.name);
+    course.forEach((e) => {
+        let cook = Object.entries(obj[e]).sort((a, b) => b[1] - a[1]);
+        
+        let max = 0 // 가장 많이 주문된 코스요리의 주문 횟수
+        for (let i = 0; i < cook.length; i ++) {
+            // 메뉴 주문 횟수가 2회 이상인 경우에만 코스요리를 만들 수 있음
+            if (cook[i][1] > 1) {
+                // 내림차순 정렬된 상태이므로 맨 앞 요리가 가장 많이 주문된 요리
+                if (i === 0) {
+                    max = cook[i][1];
+                    answer.push(cook[i][0]);
                 }
-                else if (menu.num === cnt) answer.push(menu.name);
-            }
-        })
-    })
+                // 맨앞 요리와 같은 횟수로 주문된 요리가 있다면 정답 배열에 담기
+                else {
+                    if (cook[i][1] === max) answer.push(cook[i][0]);
+                    else if (cook[i][1] < max) break;
+                }
+            };            
+        };
+    });
     
-    answer.sort();
+    console.log(answer.sort());
+    
+    // 조합 함수
+    function getComb(arr, num) {
+        const result = [];
+        
+        if (num === 1) return arr.map(e => [e]);
+        
+        arr.forEach((fix, idx, origin) => {
+            // 해당하는 fix를 제외한 나머지 뒤 문자들
+            const rest = origin.slice(idx + 1);
+            // 나머지에 대해 조합 구함
+            const comb = getComb(rest, num - 1);
+            // 돌아온 조합에 뗴 놓은(fixed) 값 붙이기
+            const str = comb.map(e => [fix, ... e]);
+            
+            result.push(...str);
+        });
+        
+        return result;
+    };
     
     return answer;
 }
