@@ -25,5 +25,5 @@ function dfs(arr, x, y, len) {
         };
     };
 
-    answer[quad] ++
+    answer[quad] ++;
 };
