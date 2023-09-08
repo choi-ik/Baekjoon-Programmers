@@ -31,25 +31,32 @@ function solution(relation) {
         if (set.size === relation.length) key.push(e);
     });
     
-    // 최소성 체크
-    function checkMinimality(combinations){
-        let results=[]; // 최소성을 만족하는 조합들로만 이루어진 results 배열
-
-        while(combinations.length){
-            results.push(combinations[0]);
-            // 유일성을 만족하는 조합중 첫번째 원소를 최소성을 만족하는 원소로 넣는다. 
-            combinations=combinations.reduce((acc,cur)=>{
-                let notMinimal=combinations[0].every(combination=>cur.includes(combination));
-                // 현재 조회중인 cur배열 안에 combinations[0]의 모든 원소가 포함된다면 최소성을 만족하지 않는것임
-                if(!notMinimal) acc.push(cur); 
-                // 최소성을 만족하는 cur 조합을 acc에 추가해줌
-                return acc;
-            },[])
-            // combinations들은 combinations[0]과 비교해서 최소성을 만족하는애들로 갱신됨
-        }
-
-        return results;
     
+    // 최소성 체크
+    function checkMinimality(arr){
+        let results = []; // 최소성을 만족하는 조합들로만 이루어진 results 배열
+        let i  = 0;
+        while(i < arr.length){
+            results.push(arr[0]);
+            let arrCopy = [];
+            let temp = arr[0];
+            
+            for (let idx = 0; idx < arr.length; idx ++) {
+                let check = false;
+                let cnt = 0;
+                
+                temp.map(e => {
+                    if (arr[idx].includes(e)) cnt ++
+                });
+                
+                if (cnt !== temp.length) arrCopy.push(arr[idx]);
+            }
+            
+            arr = arrCopy;
+        };
+        
+        i++;
+        return results;
     }
     
     
