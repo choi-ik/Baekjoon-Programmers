@@ -27,16 +27,23 @@ function solution(relation) {
             
             set.add(temp);
         };
-                
+        
+        // set 객체의 사이즈가 튜플의 개수와 같다면 유일성 보장
         if (set.size === relation.length) key.push(e);
     });
     
+    // 유일성을 만족하는 속성들 길이 오름차순으로 정렬
+    key.sort((a, b) => a.length - b.length);
+    // 정답 출력
+    return checkMinimality(key).length;
     
     // 최소성 체크
     function checkMinimality(arr){
         let results = []; // 최소성을 만족하는 조합들로만 이루어진 results 배열
         let i  = 0;
+        
         while(i < arr.length){
+            // 가장 작은 길이의 유일성 만족하는 속성들 push
             results.push(arr[0]);
             let arrCopy = [];
             let temp = arr[0];
@@ -45,6 +52,7 @@ function solution(relation) {
                 let check = false;
                 let cnt = 0;
                 
+                // 현재 후보키가 다른 후보키에 모두 포함이 되어 최소성을 만족하지 못할 때
                 temp.map(e => {
                     if (arr[idx].includes(e)) cnt ++
                 });
@@ -57,7 +65,7 @@ function solution(relation) {
         
         i++;
         return results;
-    }
+    };
     
     
     // 조합 생성 함수
@@ -74,8 +82,6 @@ function solution(relation) {
 
         });
 
-    return results; // 결과 담긴 results return
-};
-    
-    return checkMinimality(key).length;
+        return results; // 결과 담긴 results return
+    };
 };
