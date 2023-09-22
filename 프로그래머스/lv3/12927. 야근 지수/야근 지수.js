@@ -1,35 +1,13 @@
-function solution(n, works) {
-    var answer = 0;
-    const heap = new MaxHeap();
-
-    // 힙큐에 값 삽입
-    works.forEach((e) => heap.heap_push(e));
-
-    // n번 만큼 힙큐에서 가장 큰 값을 빼 -1 을 한뒤 다시 힙 큐에 넣어주기
-    for (let i = 1; i <= n; i ++) {
-        let temp = heap.heap_pop();
-        
-        heap.heap_push(temp - 1);
-    };
-
-    // 남은 작업량 제곱후 더하기
-    heap.heap_return().forEach((e) => {
-        if (e < 0) return 0;
-        if (e !== null) answer += e ** 2;
-    })
-    
-    return answer;
-};
-
 // 우선순위 큐(최대 힙)
 class MaxHeap {
     constructor() {
         this.heap = [null];
+        this.cnt = 0;
     }
-    
-    heap_push(value) {
-        // 아래서 위로
+    // 데이터 삽입
+    push(value) {
         this.heap.push(value);
+        this.cnt ++;
         
         let currentIndex = this.heap.length - 1;
         let parentIndex = Math.floor(currentIndex / 2);
@@ -43,11 +21,11 @@ class MaxHeap {
             parentIndex = Math.floor(currentIndex / 2);
         };
     };
-    
-    heap_pop() {
-        if (this.heap.length === 2) return this.heap.pop(); // 루트 정점만 남은 경우
+    // 데이터 추출
+    pop() {
+        if (this.cnt !== 0) this.cnt--;
+        if (this.heap.length === 2) return this.heap.pop();
         
-        // 위에서 아래로
         let returnValue = this.heap[1];
         this.heap[1] = this.heap.pop();
         let currentIndex = 1;
@@ -70,12 +48,46 @@ class MaxHeap {
             
             leftIndex = currentIndex * 2;
             rightIndex = leftIndex + 1;
-        }
+        };
         
         return returnValue;
-    }
-    
-    heap_return() {
+    };
+    // 가장 큰 수
+    max() {
+        return this.heap[1];
+    };
+    // 힙 출력
+    display() {
         return this.heap;
-    }
+    };
+    // 힙 크기
+    size() {
+        return this.cnt;
+    };
+};
+
+function solution(n, works) {
+    let answer = 0;
+    const maxHeap = new MaxHeap();
+    
+    // 힙에 데이터 넣기
+    works.forEach(e => {
+        maxHeap.push(e);
+    });
+    
+    // 야근 피로도 최소화한 값 구하기
+    while (n > 0) {
+        let maxData = maxHeap.pop();
+        maxHeap.push(maxData - 1);
+        
+        n --;
+    };
+    
+    // 최소화 한 작업량 제곱하여 더하기
+    maxHeap.display().forEach(e => {
+        if (e < 0) answer += 0;
+        else answer += e ** 2;
+    });
+    
+    return answer;
 }
