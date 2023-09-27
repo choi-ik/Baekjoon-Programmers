@@ -1,24 +1,25 @@
 function solution(n, computers) {
     let answer = 0;
-    let visited = new Array(computers.length).fill(false);
-
-    function DFS(i) {
-        visited[i] = true;
-        for(let j=0; j<computers[i].length; j++) {
-            if(computers[i][j] === 1 && visited[j] === false) {
-                DFS(j);
-            }
+    let visit = Array.from({length: computers.length}, () => true); // 방문 배열
+    
+    for (let i = 0; i < computers.length; i ++) {
+        if (visit[i]) {
+            visit = dfs(i, computers, visit);
+            answer ++;
         }
     }
     
-    for(let i=0; i<n; i++) {
-        if(visited[i] === false) {
-            DFS(i);
-            answer++;
-        }
-    };
-    
-    console.log(computers);
-    console.log(answer)
     return answer;
 }
+
+function dfs(i, computers, visit) {
+    
+    for (let idx = 0; idx < computers[i].length; idx ++) {
+        if (visit[idx] && computers[i][idx] === 1) {
+            visit[idx] = false;
+            visit = dfs(idx, computers, visit);
+        }
+    }
+    
+    return visit;
+};
