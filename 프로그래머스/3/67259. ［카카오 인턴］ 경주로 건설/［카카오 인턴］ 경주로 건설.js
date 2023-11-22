@@ -23,7 +23,7 @@ function solution(board) {
                     if ((direction === -1 || direction === i) && price + 100 <= cost[nx][ny]) {
                         cost[nx][ny] = price + 100;
                         q.push([nx, ny, price + 100, i]);
-                    } else if (price + 600 <= cost[nx][ny] + 200) {
+                    } else if (price + 600 <= cost[nx][ny] + 300) {
                         cost[nx][ny] = price + 600;
                         q.push([nx, ny, price + 600, i]);
                     }
@@ -35,6 +35,6 @@ function solution(board) {
     };
     
     bfs();
-    
+    console.log(cost)
     return cost[n - 1][n - 1];
 }
