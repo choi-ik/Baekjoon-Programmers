@@ -1,23 +1,28 @@
 function solution(n, times) {
-    let answer = 0;
-    let start = 1;
-    let end = times.sort((a, b) => a - b)[1] * n;
+    let answer = Infinity;
+    const min = 1;
+    const max = Math.max(...times) * n;
     
-    while (start <= end) {
-        const mid = Math.floor((start + end) / 2);
-        let peoples = 0;
-        
-        for (const time of times) {
-            peoples += Math.floor(mid / time);
+    function binarySearch(start, end) {
+        while (start <= end) {
+            let mid = Math.floor((start + end) / 2);     
+            let count = 0;
+            
+            times.forEach(time => {
+                count += Math.floor(mid / time);
+                
+                 if (count >= n) {
+                    answer = Math.min(answer, mid);
+                    return;
+                }
+            })
+            
+            if (count >= n) end = mid - 1;
+            else start = mid + 1;
         }
         
-        if (peoples >= n) {
-            answer = mid;
-            end = mid - 1;  
-        } 
-        else start = mid + 1  
-        
+        return answer;
     }
     
-    return answer;
+    return binarySearch(min, max);;
 }
